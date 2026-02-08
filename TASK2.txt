@@ -1,0 +1,36 @@
+1.Definition and purpose of SELECT statement?
+SELECT is necessary command in SQl used to get the data from one or more tables in the database.
+it goals to display data in a structured way.
+2.At least 3 examples of basic SELECT queries with explanations?
+example 1: SELECT first_name, last_name, department 
+FROM employees 
+WHERE department = 'Sales' ORDER BY last_name;
+This query retrieves the first and last names of employees 
+in the Sales department, sorted alphabetically by last name.
+example 2: SELECT * 
+FROM employees;
+Retrieves all columns and rows from the employees table.
+example 3:SELECT first_name, last_name, department
+ FROM employees;
+Returns only the first name, last name, and department of each employee.
+
+3.Examples of WHERE, ORDER BY, and DISTINCT usage?
+example of where:SELECT first_name, last_name, department 
+FROM employees 
+WHERE department = 'Sales' AND hire_date > '2020-01-01';
+Retrieves employees in the Sales department who were hired after January 1, 2020.
+example od oreder by:SELECT first_name, last_name, salary 
+FROM employees 
+ORDER BY salary DESC;
+Lists employees ordered by salary, highest first.
+example of DISTINCT:
+SELECT DISTINCT department 
+FROM employees;
+Shows a list of unique departments (no duplicates).
+4. why select is fundamental to SQL?
+because it is the primary way to interact with and retrieve data from a relational database
+
+
+
+
+
