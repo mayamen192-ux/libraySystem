@@ -1,0 +1,12 @@
+Task 1.1: Look at the Loan table. Which column connects it to the Member table?
+Answer: loanID, memberID, bookID
+
+Task 1.2: Which column connects the Loan table to the Book table?
+Answer:loanID
+
+Task 1.3: Which column connects the Staff table to the Library table?
+Answer:staffID
+
+Task 1.4: Which column connects the Review table to the Book table?
+Answer:bookID
+
