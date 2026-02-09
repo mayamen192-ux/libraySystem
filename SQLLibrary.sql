@@ -333,7 +333,7 @@ values('History',99667754,2001, NULL, NULL),
 
 ALTER TABLE bookk1
 DROP column BLID;
-select * from link2
+select * from payment1
 
 
  insert into bookk1(title,ISBN,	price,BLID,isAvailable,Genre,ShelfLocation)
@@ -398,4 +398,233 @@ insert into link2(IDBook2,IDMember2,rating2)
 values(2,1,3),
 (1,2,2),
 (3,4,1);
+
+SELECT *
+FROM library1;
+
+SELECT *
+FROM member;
+
+SELECT *
+FROM review1;
+
+SELECT LibraryName,Lyear 
+from library1;
+
+SELECT title,Genre,price
+from bookk1;
+
+SELECT Fname,email
+from member;
+
+SELECT staffID,Fname,Lname,position
+from staff1;
+
+SELECT title
+from bookk1
+where Genre='Fiction';
+
+SELECT title
+from bookk1
+where ShelfLocation='New York';
+
+SELECT title
+from bookk1 
+where isAvailable='True';
+
+SELECT Fname
+from staff1
+where position='Oman';
+
+SELECT loanDate
+from loan1
+where status='Overdue';
+
+SELECT title
+from bookk1
+where price>20;
+
+SELECT memberID
+from member
+where membershipStartDate<' 2025-01-01';
+
+SELECT PayID
+from payment1
+where amount >=10;
+
+SELECT title
+from bookk1
+where price <=20;
+
+SELECT reviewDate
+from review1
+where rating !=5;
+
+SELECT title
+from bookk1
+where Genre='Fiction' AND isAvailable='True';
+
+SELECT title
+from bookk1
+where Genre='Fiction' OR Genre='Children';
+
+SELECT memberID
+FROM member
+where ShelfLocation='New York' AND membershipStartDate >'2024-01-01';
+
+SELECT title
+from bookk1
+where  (price >= 10 AND price <=30);
+
+SELECT loanDate
+from loan1
+where status <>'Returned' ;
+
+SELECT title
+from bookk1
+ORDER BY title ASC;
+
+SELECT title,price
+from bookk1
+ORDER BY price DESC;
+
+
+SELECT memberID,membershipStartDate
+from member
+ORDER BY membershipStartDate DESC;
+
+SELECT LibraryName, Lyear
+from library1
+ORDER BY Lyear ASC;
+
+SELECT rating, reviewDate
+from review1 
+ORDER BY rating DESC ,  reviewDate ASC;
+
+
+SELECT DISTINCT Genre
+from bookk1;
+
+
+SELECT DISTINCT LibraryName
+from library1;
+
+SELECT DISTINCT position
+from staff1;
+
+SELECT DISTINCT status
+from loan1;
+
+SELECT Top 5 title,price
+from bookk1
+ORDER BY price DESC;
+
+SELECT Top 10 memberID,membershipStartDate
+from member
+ORDER BY membershipStartDate ASC; 
+
+SELECT Top 3 LibraryName,Lyear
+from library1
+ORDER BY Lyear ASC;
+
+SELECT Top 5 rating,reviewDate
+from review1
+ORDER BY rating DESC;
+
+SELECT title
+from bookk1
+where title LIKE 'The%';
+
+SELECT email
+from member
+where email LIKE '%gmail.com%';
+
+SELECT LibraryName
+from library1
+where LibraryName LIKE '%library';
+
+SELECT title
+from bookk1
+where title LIKE '%with%';
+
+SELECT Fname
+from staff1
+where Fname LIKE 'A%';
+
+SELECT loanDate,returnDate,status
+from loan1
+where returnDate IS NULL;
+
+
+SELECT loanDate,returnDate,status
+from loan1
+where returnDate IS NOT  NULL;
+
+SELECT reviewDate,comments
+from review1
+where reviewDate IS NULL OR comments ='NO comment';
+
+SELECT title,Genre, price,isAvailable
+from bookk1
+where Genre='Fiction'
+AND isAvailable='True'
+AND price <25
+ORDER BY price ASC;
+
+SELECT  Top 5 status,loanDate,dueDate
+from loan1
+where status='Overdue'
+ORDER BY dueDate DESC;
+
+SELECT title,ShelfLocation,price
+from bookk1
+where ShelfLocation='New York' OR ShelfLocation='California'
+AND  price >=30
+ORDER BY title ASC;
+
+SELECT title,Genre,price
+from bookk1
+where Genre='Fiction' OR Genre='Children'
+AND (price >= 10 AND price <=30);
+
+SELECT memberID,Fname,email,membershipStartDate
+from member
+where Year(membershipStartDate)= 2023 OR Year(membershipStartDate)=2024
+AND email='%gmail.com%'
+ORDER BY membershipStartDate ASC;
+
+SELECT TOP 10 Genre,isAvailable
+from bookk1 
+where Genre='Fiction' OR Genre='Non-Fiction';
+
+SELECT loanDate,status,returnDate
+from loan1
+where status='Issued' 
+AND Year(returnDate)=2025
+ORDER BY loanDate;
+
+SELECT staffsID,LibraryName,Lyear
+from library1
+where Lyear < 2010 
+AND LibraryName='History' OR LibraryName='computing';
+
+alter table review1
+add bookReview int;
+
+alter table review1
+add CONSTRAINT FK_review1_book 
+FOREIGN KEY (bookReview) REFERENCES bookk1(bookID);
+
+SELECT bookID,reviewID
+from bookk1 left outer join review1
+ON bookID=bookReview;
+
+
+
+
+
+
+
+
+
 
