@@ -406,7 +406,7 @@ SELECT *
 FROM member;
 
 SELECT *
-FROM review1;
+FROM bookk1;
 
 SELECT LibraryName,Lyear 
 from library1;
@@ -555,7 +555,6 @@ SELECT loanDate,returnDate,status
 from loan1
 where returnDate IS NULL;
 
-
 SELECT loanDate,returnDate,status
 from loan1
 where returnDate IS NOT  NULL;
@@ -618,6 +617,127 @@ FOREIGN KEY (bookReview) REFERENCES bookk1(bookID);
 SELECT bookID,reviewID
 from bookk1 left outer join review1
 ON bookID=bookReview;
+
+--------------------------------------
+alter table loan1
+add bookloan int;
+alter table loan1
+add CONSTRAINT FK_loan_book 
+FOREIGN KEY (bookloan) REFERENCES bookk1(bookID);
+
+alter table library1
+add bookkID int;
+alter table library1
+add CONSTRAINT FK_library_book 
+FOREIGN KEY (bookkID) REFERENCES bookk1(bookID);
+
+
+SELECT LoanID,title,loanDate,dueDate
+from  bookk1 inner join loan1 
+on bookID =bookloan
+
+SELECT Fname,Lname,position,LibraryName,LibraryId
+from staff1 inner join library1
+on  staffsID=staffID
+
+SELECT title,Genre,price,LibraryName,Lyear
+from bookk1 inner join library1
+on bookkID=bookID
+
+select * from review1
+
+
+SELECT Fname,Lname,rating,comments,reviewDate
+from member inner join review1
+on memberssID=memberID
+
+alter table review1
+add bookrev int;
+
+alter table review1
+add CONSTRAINT FK_review_book 
+FOREIGN KEY (bookrev) REFERENCES bookk1(bookID);
+
+
+SELECT title,rating,comments,reviewDate
+from bookk1 inner join review1
+on bookID=bookrev
+
+SELECT LoanID,PayDate,amount,method,status
+from loan1  l inner join payment1 p
+on p.loanID=l.LoanID
+
+SELECT l.LoanID AS LoanID_from_loan1, p.LoanID AS LoanID_from_payment1, 
+p.PayDate, p.amount, p.method, l.status 
+FROM loan1 l INNER JOIN payment1 p 
+ON p.LoanID = l.LoanID;
+
+SELECT * from review1
+
+alter table loan1
+add memberIDs int;
+alter table loan1
+add CONSTRAINT FK_loan_member 
+FOREIGN KEY (memberIDs) REFERENCES loan1(LoanID);
+
+alter table member
+add bookIDss int;
+alter table member
+add CONSTRAINT FK_book_member 
+FOREIGN KEY (bookIDss) REFERENCES bookk1(bookID);
+
+SELECT m.Fname,m.Lname,b.title,l.loanDate,l.dueDate,l.status
+from member m  inner join loan1 l  on memberIDs=LoanID
+inner join bookk1 b on m.bookIDss=b.bookID
+
+SELECT m.Fname,m.Lname,b.title,r.rating,r.comments
+from member m inner join bookk1 b on  m.bookIDss= b.bookID
+inner join review1 r on r.bookReview=b.bookID
+
+SELECT b.title,b.Genre,l.LibraryName,l.Lyear,l.contactNumber
+from bookk1 b inner join library1 l 
+on l.booksId=b.bookID
+
+select * from member
+SELECT b.title,b.Genre,r.rating,r.comments
+from bookk1 b left outer join review1 r
+on r.bookReview=b.bookID
+
+SELECT m.Fname,m.Lname, m.email,l.loanDate,l.dueDate,l.status
+from member m left outer join loan1 l
+on l.memberIDs=m.memberID
+
+SELECT l.LoanID, l.loanDate,l.status,p.PayDate,p.amount
+from loan1 l left outer join payment1 p
+on p.loanID=p.LoanID
+
+SELECT b.bookID,b.title
+from bookk1 b left outer join review1 r
+on r.bookReview=b.bookID
+where r.bookReview IS NULL;
+
+select * from review1
+
+SELECT b.title,m.Fname,m.Lname,r.rating,r.comments
+from bookk1 b left outer join member m
+on m.bookIDss=b.bookID left outer join review1 r
+on r.memberssID=m.memberID
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
 
 
 
