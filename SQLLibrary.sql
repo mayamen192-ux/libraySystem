@@ -402,6 +402,15 @@ values(2,1,3),
 SELECT *
 FROM library1;
 
+
+
+
+
+
+
+
+
+
 SELECT *
 FROM member;
 
@@ -410,6 +419,15 @@ FROM bookk1;
 
 SELECT LibraryName,Lyear 
 from library1;
+
+
+
+
+
+
+
+
+
 
 SELECT title,Genre,price
 from bookk1;
@@ -420,9 +438,14 @@ from member;
 SELECT staffID,Fname,Lname,position
 from staff1;
 
-SELECT title
-from bookk1
-where Genre='Fiction';
+
+
+
+
+
+
+
+
 
 SELECT title
 from bookk1
@@ -464,17 +487,39 @@ SELECT title
 from bookk1
 where Genre='Fiction' AND isAvailable='True';
 
+
+
+
+
+
+
+
 SELECT title
 from bookk1
 where Genre='Fiction' OR Genre='Children';
+
+
+
+
+
 
 SELECT memberID
 FROM member
 where ShelfLocation='New York' AND membershipStartDate >'2024-01-01';
 
+
+
+
 SELECT title
 from bookk1
 where  (price >= 10 AND price <=30);
+
+
+
+
+
+
+
 
 SELECT loanDate
 from loan1
@@ -493,6 +538,13 @@ SELECT memberID,membershipStartDate
 from member
 ORDER BY membershipStartDate DESC;
 
+
+
+
+
+
+
+
 SELECT LibraryName, Lyear
 from library1
 ORDER BY Lyear ASC;
@@ -508,6 +560,12 @@ from bookk1;
 
 SELECT DISTINCT LibraryName
 from library1;
+
+
+
+
+
+
 
 SELECT DISTINCT position
 from staff1;
@@ -531,6 +589,8 @@ SELECT Top 5 rating,reviewDate
 from review1
 ORDER BY rating DESC;
 
+
+
 SELECT title
 from bookk1
 where title LIKE 'The%';
@@ -538,6 +598,12 @@ where title LIKE 'The%';
 SELECT email
 from member
 where email LIKE '%gmail.com%';
+
+
+
+
+
+
 
 SELECT LibraryName
 from library1
@@ -555,9 +621,15 @@ SELECT loanDate,returnDate,status
 from loan1
 where returnDate IS NULL;
 
+
+
 SELECT loanDate,returnDate,status
 from loan1
 where returnDate IS NOT  NULL;
+
+
+
+
 
 SELECT reviewDate,comments
 from review1
@@ -570,6 +642,7 @@ AND isAvailable='True'
 AND price <25
 ORDER BY price ASC;
 
+
 SELECT  Top 5 status,loanDate,dueDate
 from loan1
 where status='Overdue'
@@ -581,6 +654,10 @@ where ShelfLocation='New York' OR ShelfLocation='California'
 AND  price >=30
 ORDER BY title ASC;
 
+
+
+
+
 SELECT title,Genre,price
 from bookk1
 where Genre='Fiction' OR Genre='Children'
@@ -591,6 +668,10 @@ from member
 where Year(membershipStartDate)= 2023 OR Year(membershipStartDate)=2024
 AND email='%gmail.com%'
 ORDER BY membershipStartDate ASC;
+
+
+
+
 
 SELECT TOP 10 Genre,isAvailable
 from bookk1 
@@ -617,6 +698,12 @@ FOREIGN KEY (bookReview) REFERENCES bookk1(bookID);
 SELECT bookID,reviewID
 from bookk1 left outer join review1
 ON bookID=bookReview;
+
+
+
+
+
+
 
 --------------------------------------
 alter table loan1
@@ -685,7 +772,7 @@ add bookIDss int;
 alter table member
 add CONSTRAINT FK_book_member 
 FOREIGN KEY (bookIDss) REFERENCES bookk1(bookID);
-
+ --inner join
 SELECT m.Fname,m.Lname,b.title,l.loanDate,l.dueDate,l.status
 from member m  inner join loan1 l  on memberIDs=LoanID
 inner join bookk1 b on m.bookIDss=b.bookID
@@ -698,7 +785,7 @@ SELECT b.title,b.Genre,l.LibraryName,l.Lyear,l.contactNumber
 from bookk1 b inner join library1 l 
 on l.booksId=b.bookID
 
-select * from member
+--left outer join
 SELECT b.title,b.Genre,r.rating,r.comments
 from bookk1 b left outer join review1 r
 on r.bookReview=b.bookID
@@ -722,6 +809,113 @@ SELECT b.title,m.Fname,m.Lname,r.rating,r.comments
 from bookk1 b left outer join member m
 on m.bookIDss=b.bookID left outer join review1 r
 on r.memberssID=m.memberID
+
+--right outer join
+SELECT m.Fname,m.Lname, m.email,l.loanDate,l.dueDate,l.status
+from member m right outer join loan1 l
+on l.memberIDs=m.memberID
+
+SELECT l.LoanID, l.loanDate,l.status,p.PayDate,p.amount
+from loan1 l right outer join payment1 p
+on p.loanID=p.LoanID
+
+
+SELECT * from library1
+SELECT b.title,b.Genre,l.LibraryName,l.Lyear,l.contactNumber
+from bookk1 b right outer join library1 l 
+on l.bookkID=b.bookID
+
+
+SELECT l.LibraryName,s.Fname
+from library1 l right outer join staff1 s
+on l.staffsID = s.staffID
+
+--full outer join
+SELECT b.title,r.rating,r.comments
+from bookk1 b FULL OUTER JOIN review1 r
+on r.bookReview=b.bookID
+
+SELECT l.loanID,l.loanDate,p.PayDate,p.amount
+from loan1 l full outer join payment1 p
+on p.loanID=l.LoanID
+
+
+
+-- task 2.7 and task 5.3  i go table incluing member id, book id, loan id because ther is relationship between them 
+-- so i can not do join between them
+
+select * from payment1
+
+
+
+update  payment1
+set loanID= 1
+where PayID=3
+
+-- multi types of join
+SELECT m.Fname,m.Lname,l.loanDate,l.dueDate,l.status,p.PayDate,p.amount
+from member m inner join loan1 l 
+on l.memberIDs=m.memberID left outer join payment1 p
+on p.loanID=l.LoanID
+
+
+SELECT l.LibraryName,b.title,b.Genre,r.rating, r.comments
+from bookk1 b inner join library1 l
+on l.booksId=b.bookID left outer join review1 r
+on r.bookrev=b.bookID
+
+SELECT m.Fname,m.Lname,b.title,lb.LibraryName,l.loanDate,l.returnDate
+from member m inner join loan1 l 
+on l.memberIDs=m.memberID inner join bookk1 b
+on l.bookloan=b.bookID inner join library1 lb
+on lb.booksId=b.bookID
+
+ SELECT lb.LibraryName,b.title, 
+ COUNT(s.staffID) AS staffNumber,COUNT(l.loanID) AS loanNumber
+ from bookk1 b left outer join loan1 l
+ on   l.bookloan = b.bookID left  outer join library1 lb
+ on lb.booksId=b.bookID left outer join staff1 s
+ on lb.staffsID=s.staffID 
+ GROUP BY lb.LibraryName,b.title
+ ORDER BY lb.LibraryName;
+
+ SELECT  m.Fname,m.email,
+ COUNT(l.loanID) AS TotalLoans,COUNT(r.reviewID) AS totalReviews
+ from member m left outer join loan1 l
+ on l.memberIDs=m.memberID left outer join review1 r
+ on r.memberssID=m.memberID 
+ GROUP BY m.Fname , m.email
+ ORDER BY m.Fname;
+
+
+SELECT b.Title, lb.LibraryName, 
+AVG(r.Rating) AS AverageRating, COUNT(r.ReviewID) AS TotalReviews 
+from library1 lb LEFT JOIN Bookk1 b 
+ON lb.booksId = b.BookID LEFT JOIN Review1 r
+ON r.BookReview = b.BookID 
+GROUP BY b.Title,
+lb.LibraryName 
+ORDER BY lb.LibraryName, b.Title;
+
+--here can not do join between library and payment
+SELECT m.Fname AS memberName,m.email,b.title AS bookTitles
+DATEDIFF(DAY, loan.DueDate, GETDATE()) AS DaysOverdue, p.Finepayment AS FinePaid
+from loan1 l inner  join member m
+on l.memberIDs=m.memberID inner join bookk1 b
+on m.bookIDss=b.bookID inner join library1 lb
+on lb.booksId=b.bookID left outer join payment1 p
+
+
+
+
+
+ 
+
+select * from library1
+
+alter table 
+
+
 
 
 
