@@ -633,7 +633,7 @@ where returnDate IS NOT  NULL;
 
 SELECT reviewDate,comments
 from review1
-where reviewDate IS NULL OR comments ='NO comment';
+where comments IS NULL OR comments ='NO comment';
 
 SELECT title,Genre, price,isAvailable
 from bookk1
@@ -723,6 +723,13 @@ SELECT LoanID,title,loanDate,dueDate
 from  bookk1 inner join loan1 
 on bookID =bookloan
 
+
+
+
+
+
+
+
 SELECT Fname,Lname,position,LibraryName,LibraryId
 from staff1 inner join library1
 on  staffsID=staffID
@@ -790,6 +797,13 @@ SELECT b.title,b.Genre,r.rating,r.comments
 from bookk1 b left outer join review1 r
 on r.bookReview=b.bookID
 
+
+
+
+
+
+
+
 SELECT m.Fname,m.Lname, m.email,l.loanDate,l.dueDate,l.status
 from member m left outer join loan1 l
 on l.memberIDs=m.memberID
@@ -803,7 +817,12 @@ from bookk1 b left outer join review1 r
 on r.bookReview=b.bookID
 where r.bookReview IS NULL;
 
-select * from review1
+
+
+
+
+
+
 
 SELECT b.title,m.Fname,m.Lname,r.rating,r.comments
 from bookk1 b left outer join member m
@@ -835,6 +854,13 @@ SELECT b.title,r.rating,r.comments
 from bookk1 b FULL OUTER JOIN review1 r
 on r.bookReview=b.bookID
 
+
+
+
+
+
+
+
 SELECT l.loanID,l.loanDate,p.PayDate,p.amount
 from loan1 l full outer join payment1 p
 on p.loanID=l.LoanID
@@ -844,13 +870,12 @@ on p.loanID=l.LoanID
 -- task 2.7 and task 5.3  i go table incluing member id, book id, loan id because ther is relationship between them 
 -- so i can not do join between them
 
-select * from payment1
-
-
-
+select * from payment1s
 update  payment1
 set loanID= 1
 where PayID=3
+
+
 
 -- multi types of join
 SELECT m.Fname,m.Lname,l.loanDate,l.dueDate,l.status,p.PayDate,p.amount
@@ -888,6 +913,9 @@ on lb.booksId=b.bookID
  ORDER BY m.Fname;
 
 
+
+ 
+
 SELECT b.Title, lb.LibraryName, 
 AVG(r.Rating) AS AverageRating, COUNT(r.ReviewID) AS TotalReviews 
 from library1 lb LEFT JOIN Bookk1 b 
@@ -905,20 +933,56 @@ on l.memberIDs=m.memberID inner join bookk1 b
 on m.bookIDss=b.bookID inner join library1 lb
 on lb.booksId=b.bookID left outer join payment1 p
 
+SELECT m.Fname AS memberNames ,b.title AS bookTitle ,b.Genre,lb.LibraryName,l.loanDate,l.returnDate,
+DATEDIFF(DAY, l.loanDate, ISNULL(l.returnDate, GETDATE())) AS DaysBorrowed, r.rating AS RatingGiven
+from member m inner join bookk1 b
+on m.bookIDss=b.bookID inner join library1 lb
+on lb.booksId=b.bookID left outer join loan1 l
+on l.bookloan=b.bookID left outer join review1 r
+on r.bookrev=b.bookID
+ORDER BY m.Fname,l.loanDate
+
+
+SELECT b.title,b.Genre,b.price,lb.libraryName,l.loanID
+from bookk1 b left outer join library1 lb
+on lb.booksId =b.bookID left outer join loan1 l 
+on l.bookloan=b.bookID
+where l.loanID IS NULL ;
+
+
+--here join can not do because ther is no relationship between loan and review
+SELECT m.Fname,m.memberID, r.reviewDate,r.comments
+DATEDIFF(DAY, l.loanDate, ISNULL(l.returnDate, GETDATE())) AS DaysBorrowed
+from member m left outer join loan1 l
+on l.memberIDs=m.memberID left outer join review1 r
+on
+
+
+SELECT s.Fname, s.position, lb.LibraryName, 
+COUNT(DISTINCT b.bookID) AS numberOfBook, 
+COUNT(DISTINCT CASE WHEN l.returnDate IS NULL THEN l.loanID END) AS numberofactiveloans 
+FROM staff1 s JOIN library1 lb 
+ON lb.staffsID = s.staffID LEFT OUTER JOIN bookk1 b 
+ON b.bookStaff = s.staffID LEFT OUTER JOIN loan1 l
+ON l.bookloan = b.bookID 
+GROUP BY s.Fname, s.position, lb.LibraryName;
 
 
 
 
- 
 
-select * from library1
-
-alter table 
-
-
-
+alter table bookk1
+add bookStaff int;
+alter table bookk1
+add CONSTRAINT FK_book_staff
+FOREIGN KEY (bookStaff) REFERENCES staff1(staffID);
 
 
+
+ select * from loan1
+ update  bookk1
+set bookStaff= 2
+where bookID=3
 
 
 
