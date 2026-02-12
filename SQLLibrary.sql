@@ -943,11 +943,16 @@ on r.bookrev=b.bookID
 ORDER BY m.Fname,l.loanDate
 
 
+
 SELECT b.title,b.Genre,b.price,lb.libraryName,l.loanID
 from bookk1 b left outer join library1 lb
 on lb.booksId =b.bookID left outer join loan1 l 
 on l.bookloan=b.bookID
 where l.loanID IS NULL ;
+
+
+
+
 
 
 --here join can not do because ther is no relationship between loan and review
@@ -956,6 +961,7 @@ DATEDIFF(DAY, l.loanDate, ISNULL(l.returnDate, GETDATE())) AS DaysBorrowed
 from member m left outer join loan1 l
 on l.memberIDs=m.memberID left outer join review1 r
 on
+
 
 
 SELECT s.Fname, s.position, lb.LibraryName, 
@@ -976,6 +982,361 @@ add bookStaff int;
 alter table bookk1
 add CONSTRAINT FK_book_staff
 FOREIGN KEY (bookStaff) REFERENCES staff1(staffID);
+
+-------------------------aggrigration funtion
+SELECT COUNT(*) AS num_books
+from bookk1
+
+
+
+
+
+
+
+
+SELECT COUNT(memberID) AS num_registered_member
+from member
+
+
+SELECT SUM(price)AS sum_price_books
+from bookk1
+
+SELECT AVG(price) AS avger_price_books
+from bookk1
+
+
+
+
+
+
+
+
+
+
+SELECT MIN(price) AS cheapest_book , MAX(price) AS  most_expensive_book 
+from bookk1
+
+SELECT COUNT(loanID) AS num_loans 
+from loan1 
+where status='Overdue';
+
+
+
+
+
+
+
+
+
+SELECT MAX(rating) AS highest_rating
+from review1 
+
+SELECT MIN(rating) AS highest_rating
+from review1 
+
+
+SELECT COUNT(amount) AS all_fines_collected ,
+ SUM(PayID) AS sum_every_payment
+from payment1 
+
+
+
+
+
+
+
+
+SELECT COUNT(*) AS loan_returned
+from loan1
+where returnDate IS NOT NULL;
+
+
+SELECT COUNT(*),Genre
+from bookk1
+GROUP BY Genre;
+
+
+SELECT lb.LibraryID, COUNT(s.staffID) AS num_staffs
+from library1 lb  left outer join staff1 s 
+on lb.staffsID=s.staffID 
+GROUP BY LibraryID;
+
+
+
+
+
+
+
+--here i use code case when for count each status of loan
+SELECT COUNT(CASE WHEN l.status = 'Issued' THEN 1 END) AS issued_loans, 
+COUNT(CASE WHEN l.status = 'Returned' THEN 1 END) AS returned_loans, 
+COUNT(CASE WHEN l.status = 'Overdue' THEN 1 END) AS overdue_loans
+from loan1 l
+GROUP BY status;
+
+SELECT AVG(price) AS  average_book_price, Genre
+from bookk1
+GROUP BY Genre;
+
+
+SELECT SUM(price) AS  sum_book_price, Genre
+from bookk1
+GROUP BY Genre;
+
+
+SELECT MAX(price) AS  most_expensive_book , Genre
+from bookk1
+GROUP BY Genre;
+
+
+
+
+
+
+
+
+SELECT COUNT(reviewID) AS num_reviews, rating
+from review1 
+GROUP BY rating;
+
+
+
+SELECT lb.LibraryID, COUNT(b.bookID) AS num_books
+from library1 lb left outer join bookk1 b
+on lb.bookkID=b.bookID
+GROUP BY lb.LibraryID;
+
+
+
+
+
+
+
+
+SELECT m.memberID,COUNT(l.loanID) AS num_loans
+from member m left outer join loan1 l
+on l.memberIDs=m.memberID
+GROUP BY m.memberID;
+
+SELECT MIN(price) AS cheapest_book,Genre
+from bookk1
+GROUP BY Genre;
+
+
+SELECT COUNT(bookID) AS num_books,Genre
+from bookk1
+GROUP BY Genre
+ORDER BY Genre DESC;
+
+SELECT AVG(price) AS average_price,Genre
+from bookk1
+GROUP BY Genre
+ORDER BY average_price ASC;
+
+
+
+
+
+
+
+
+SELECT COUNT(*) AS loan_status,status
+from loan1
+GROUP BY status
+ORDER BY  status ASC;
+
+
+SELECT SUM(amount) AS total_payment_amount,method
+from payment1
+GROUP BY method
+ORDER BY total_payment_amount DESC;
+
+SELECT Genre
+from bookk1
+GROUP BY Genre
+HAVING COUNT(*) >= 3;
+
+SELECT l.LibraryID, COUNT(s.staffID) AS num_staff 
+FROM library1 l LEFT JOIN staff1 s
+ON l.staffsID=s.staffID
+GROUP BY l.LibraryID 
+HAVING COUNT(s.staffID) >= 2;
+
+
+SELECT m.memberID,COUNT(l.loanID) AS num_book_borrowed
+from member m join loan1 l
+on l.memberIDs=m.memberID
+GROUP BY m.memberID
+HAVING COUNT(l.loanID) >=1;
+
+
+
+
+
+
+
+SELECT Genre,AVG(price) AS avg_price
+from bookk1
+GROUP BY Genre
+HAVING AVG(price) > 30;
+
+
+SELECT b.bookID, COUNT(r.reviewID) AS num_reviews
+FROM bookk1 b JOIN review1 r 
+ON r.bookReview = b.bookID 
+GROUP BY b.bookID 
+HAVING COUNT(r.reviewID)<=2
+ORDER BY num_reviews DESC;
+
+
+SELECT Genre,SUM(price) AS total_price
+from bookk1
+GROUP BY Genre
+HAVING SUM(price)>20;
+
+
+SELECT method,SUM(amount)AS total_amounts
+from payment1
+GROUP BY method
+Having SUM(amount)>15;
+
+
+
+
+
+
+SELECT count(status) AS status_loan_times
+from loan1
+GROUP BY status
+HAVING COUNT(status) >=2;
+
+
+SELECT m.memberID,COUNT(r.reviewID) AS num_reviews
+from member m join review1 r 
+on r.memberssID=m.memberID
+GROUP BY m.memberID
+having COUNT(r.reviewID)>=2;
+
+
+
+
+
+
+SELECT lb.LibraryID, COUNT(b.bookID) AS num_books 
+FROM library1 lb  left outer JOIN bookk1 b 
+ON lb.booksId=b.bookID 
+GROUP BY lb.LibraryID 
+HAVING COUNT(b.bookID) >2;
+
+
+SELECT Genre,COUNT(*) AS books_avaiable
+from bookk1
+where IsAvailable ='True'
+GROUP BY Genre
+HAVING COUNT(*)>1;
+
+
+
+
+
+
+
+SELECT Genre, AVG(price) AS avg_price_genre
+from bookk1
+where Genre IN ('Fiction', 'Children')--is a filter condition which Only rows where the column Genre has a value of either 'Fiction' or 'Children'
+GROUP BY Genre
+HAVING AVG(price) >15;
+
+SELECT l.memberIDs, COUNT(l.loanID) AS active_loans
+FROM loan1 l 
+WHERE l.status IN ('Overdue','Issued')
+GROUP BY l.memberIDs 
+HAVING COUNT(l.loanID) > 1 
+ORDER BY active_loans DESC;
+
+SELECT r.rating,b.title,COUNT(r.reviewID) AS num_book_reviews
+from review1 join bookk1 b
+on r.bookReview=b.bookID
+where rating >=3
+GROUP BY b.title
+HAVING COUNT(r.reviewID)>=2;
+
+SELECT Genre, COUNT(bookID) AS book_priced_below20 
+FROM bookk1
+WHERE price < 30
+GROUP BY Genre
+HAVING COUNT(bookID) > 1
+ORDER BY book_priced_below20 DESC;
+
+
+SELECT lb.libraryID,lb.LibraryName, COUNT(b.bookID) AS num_books
+from library1 lb join bookk1 b
+on lb.booksId=b.bookID
+GROUP BY  lb.libraryID,lb.LibraryName
+ORDER BY num_books DESC;
+
+SELECT m.Fname,m.Lname,SUM(l.loanID) AS total_loans
+from member m join loan1 l
+on l.memberIDs=m.memberID
+GROUP BY m.Fname,m.Lname
+ORDER BY total_loans DESC; 
+
+SELECT b.title,COUNT(l.loanDate) AS loan_times
+from bookk1 b join loan1 l
+on l.bookLoan=b.bookID
+GROUP BY b.title
+ORDER BY loan_times ASC;
+
+--here becase put data type for rating TINYINT so no reult run
+SELECT b.title,AVG(CAST(r.rating AS DECIMAL(3,2))) AS avg_rating
+from book1 b  left outer join review1 r
+on r.bookReview=b.bookID
+GROUP BY b.title
+ORDER BY avg_rating DESC;
+
+
+SELECT lb.LibraryName, COUNT(b.bookID) AS num_books 
+FROM library1 lb JOIN bookk1 b
+ON lb.bookkID = b.bookID
+GROUP BY lb.LibraryName 
+HAVING COUNT(b.bookID) >= 1 
+ORDER BY num_books DESC;
+
+SELECT b.title,AVG(r.rating) AS avg_ratings
+from bookk1 b join review1 r 
+on r.bookReview=b.bookID
+GROUP BY b.title
+HAVING AVG(r.rating)>4
+ORDER BY avg_ratings DESC; 
+
+
+--here ther is no relationship between library and loan
+SELECT lb.LibraryName,SUM(l.loanID)AS sum_loans
+from library1 lb join loan1 l
+
+SELECT m.Fname, COUNT(l.loanID) AS num_overdue_loans 
+FROM member m JOIN loan1 l 
+ON l.memberIDs = m.memberID 
+WHERE l.status = 'Overdue' 
+GROUP BY m.Fname 
+HAVING COUNT(l.loanID) >=1
+ORDER BY num_overdue_loans;
+
+
+
+select* from loan1
+SELECT bookID FROM bookk1 WHERE bookID = 2;
+
+update  library1
+set booksId=2
+where LibraryId=2
+
+
+
+
+
+
+
 
 
 
