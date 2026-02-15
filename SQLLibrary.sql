@@ -1307,9 +1307,41 @@ from bookk1 b join review1 r
 on r.bookReview=b.bookID
 GROUP BY b.title
 HAVING AVG(r.rating)>4
-ORDER BY avg_ratings DESC; 
+ORDER BY avg_ratings DESC;
 
 
+SELECT lb.libraryID,lc.city ,SUM(p.finePayment) AS sum_fines 
+FROM locayion lc join library1 lb
+on lc.LIDs=lb.libraryID join bookk1 b
+on lb.booksId=b.bookID join loan1 l
+on l.bookloan=b.bookID join payment1 p
+on p.loanID=l.loanID
+GROUP BY lb.libraryID,lc.city
+HAVING SUM(p.finePayment) >=10
+ORDER BY sum_fines DESC;
+
+
+
+
+SELECT b.Genre,COUNT(l.loanID) AS num_loans
+from bookk1  b join loan1 l
+on l.bookloan=b.bookID
+GROUP BY b.Genre
+HAVING COUNT(l.loanID)>2
+ORDER BY b.Genre ASC;
+
+
+
+
+
+
+
+
+
+UPDATE payment1 
+SET finePayment = 7
+WHERE PayID = 3;
+select * from loan1
 --here ther is no relationship between library and loan
 SELECT lb.LibraryName,SUM(l.loanID)AS sum_loans
 from library1 lb join loan1 l
@@ -1324,7 +1356,64 @@ ORDER BY num_overdue_loans;
 
 
 
-select* from loan1
+SELECT b.title,COUNT(l.loanID) AS num_borrowrs,AVG(r.rating) AS  avg_review_rating
+from review1 r join bookk1 b 
+on r.bookReview=b.bookID left outer join loan1 l
+on l.bookloan=b.bookID 
+GROUP BY b.title
+HaVING COUNT(l.loanID)>=1 AND AVG(r.rating)>3
+ORDER BY avg_review_rating DESC;
+
+
+
+
+
+SELECT b.Genre,COUNT(b.title) AS num_books, AVG(b.price) AS avg_price , MIN(b.price) AS cheapeast_price_book
+from bookk1 b
+GROUP BY b.Genre
+HAVING AVG(price) BETWEEN 15 AND 50
+ORDER BY avg_price ASC;
+
+
+SELECT lb.LibraryName,lc.city,COUNT( DISTINCT b.bookID) AS num_books,COUNT( DISTINCT s.staffID) AS num_staffs,
+COUNT(l.loanID) AS num_loans,SUM(p.finePayment) AS sum_fines
+from library1 lb left outer join locayion lc
+on lc.lIDs=lb.libraryID left outer join staff1 s
+on lb.staffsID=s.staffID left outer join bookk1 b
+on b.bookStaff=s.staffID left outer join loan1 l
+on l.bookloan=l.loanID left outer join payment1 p
+on p.loanID=l.loanID
+GROUP BY lb.LibraryName,lc.city
+HAVING COUNT(l.loanID)>=1
+ORDER BY num_loans DESC;
+
+select * from loan1 
+
+create table locayion(
+lID int identity(1,1) NOT NULL,
+city varchar(100) NOT NULL,
+primary key(lID)
+);
+insert into locayion values('Suhar');
+insert into locayion values('Muscat');
+insert into locayion values('Nizwa');
+insert into locayion values('Ibra');
+
+
+
+alter table locayion
+add lIDs int 
+alter table locayion
+add CONSTRAINT FK_locayion_library
+FOREIGN KEY (lIDs) REFERENCES library1(libraryID);
+
+
+update  locayion
+set lIDs=3
+where LID=1
+
+
+select* from locayion
 SELECT bookID FROM bookk1 WHERE bookID = 2;
 
 update  library1
