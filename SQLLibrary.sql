@@ -1158,10 +1158,11 @@ HAVING COUNT(*) >= 3;
 
 SELECT l.LibraryID, COUNT(s.staffID) AS num_staff 
 FROM library1 l LEFT JOIN staff1 s
-ON l.staffsID=s.staffID
+ON s.staffLibrary=l.LibraryID
 GROUP BY l.LibraryID 
 HAVING COUNT(s.staffID) >= 2;
 
+select * from staff1
 
 SELECT m.memberID,COUNT(l.loanID) AS num_book_borrowed
 from member m join loan1 l
@@ -1380,21 +1381,22 @@ from bookk1 b
 GROUP BY b.Genre
 HAVING AVG(price) BETWEEN 15 AND 50
 ORDER BY avg_price ASC;
--- task5.6
 
-SELECT lb.LibraryName,lc.city,COUNT( DISTINCT b.bookID) AS num_books,COUNT( DISTINCT s.staffID) AS num_staffs,
-COUNT(l.loanID) AS num_loans,SUM(p.finePayment) AS sum_fines
-from library1 lb left outer join locayion lc
-on lc.lIDs=lb.libraryID left outer join staff1 s
-on lb.staffsID=s.staffID left outer join bookk1 b
-on b.bookStaff=s.staffID left outer join loan1 l
-on l.bookloan=l.loanID left outer join payment1 p
-on p.loanID=l.loanID
-GROUP BY lb.LibraryName,lc.city
-HAVING COUNT(l.loanID)>=1
+-- task5.6
+SELECT lb.LibraryName, lc.city, COUNT(DISTINCT b.bookID) AS num_books, 
+COUNT(DISTINCT s.staffID) AS num_staffs, COUNT(DISTINCT l.loanID) AS num_loans,
+SUM(p.finePayment) AS sum_fines
+FROM library1 lb LEFT OUTER JOIN locayion lc 
+ON lc.lIDs = lb.libraryID LEFT OUTER JOIN staff1 s
+ON s.staffLibrary = lb.libraryID LEFT OUTER JOIN bookk1 b 
+ON b.bookStaff = s.staffID LEFT OUTER JOIN loan1 l 
+ON l.bookloan = b.bookID LEFT OUTER JOIN payment1 p
+ON p.loanID = l.loanID
+GROUP BY lb.LibraryName, lc.city 
+HAVING COUNT(DISTINCT l.loanID) >=1 
 ORDER BY num_loans DESC;
 
-select * from loan1 
+select * from library1
 
 create table locayion(
 lID int identity(1,1) NOT NULL,
@@ -1414,13 +1416,24 @@ alter table locayion
 add CONSTRAINT FK_locayion_library
 FOREIGN KEY (lIDs) REFERENCES library1(libraryID);
 
+ALTER TABLE library1 
+DROP CONSTRAINT FK__library1__staffs__245D67DE;
 
-update  locayion
-set lIDs=3
-where LID=1
+ALTER TABLE staff1
+ADD  staffLibrary int ;
 
+ALTER TABLE staff1
+ADD CONSTRAINT FK_STAFF_library
+FOREIGN KEY (staffLibrary) REFERENCES library1(libraryID);
 
-select* from locayion
+update staff1
+set staffLibrary=3
+where staffID=3
+
+select * from staff1
+insert into table library1 values('Computing',93246572,2002,2,3,1);
+
+select* from library1
 SELECT bookID FROM bookk1 WHERE bookID = 2;
 
 update  library1
