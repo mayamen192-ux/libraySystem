@@ -1332,6 +1332,13 @@ ORDER BY b.Genre ASC;
 
 
 
+SELECT m.Fname,COUNT(l.loanID) AS borrowed_loans
+from member m join loan1 l
+on l.memberIDs=m.memberID
+GROUP BY m.Fname
+HAVING COUNT(l.loanID)>=1
+ORDER BY borrowed_loans DESC;
+
 
 
 
@@ -1373,7 +1380,7 @@ from bookk1 b
 GROUP BY b.Genre
 HAVING AVG(price) BETWEEN 15 AND 50
 ORDER BY avg_price ASC;
-
+-- task5.6
 
 SELECT lb.LibraryName,lc.city,COUNT( DISTINCT b.bookID) AS num_books,COUNT( DISTINCT s.staffID) AS num_staffs,
 COUNT(l.loanID) AS num_loans,SUM(p.finePayment) AS sum_fines
